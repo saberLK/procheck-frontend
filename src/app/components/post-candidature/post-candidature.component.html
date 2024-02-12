@@ -1,0 +1,83 @@
+<button mat-button type="button" (click)="navigateToCandidatures()">List Candidatures</button>
+<mat-stepper orientation="horizontal" [linear]="isLinear" #stepper class="d-flex justify-content-center">
+  <mat-step [stepControl]="saveCandidatureForm">
+    <form [formGroup]="saveCandidatureForm"  class="form-container">
+      <ng-template matStepLabel>Fill out your name</ng-template>
+      <mat-form-field>
+        <mat-label>Last Name :</mat-label>
+        <input matInput placeholder="Last name" formControlName="lastName" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>First Name :</mat-label>
+        <input matInput placeholder="First name" formControlName="firstName" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Email :</mat-label>
+        <input matInput placeholder="Email" formControlName="email" required>
+        <div *ngIf="saveCandidatureForm.get('email')?.invalid && saveCandidatureForm.get('email')?.touched">
+          <div *ngIf="saveCandidatureForm.get('email')?.errors?.['required']" style="color:red">Email is required</div>
+          <div *ngIf="saveCandidatureForm.get('email')?.errors?.['email']" style="color:red" >Invalid email format</div>
+        </div>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Phone :</mat-label>
+        <input matInput placeholder="Phone Number" formControlName="phoneNumber" required>
+        <div *ngIf="saveCandidatureForm.get('phoneNumber')?.invalid && saveCandidatureForm.get('phoneNumber')?.touched" class="text-danger">
+          <div *ngIf="saveCandidatureForm.get('phoneNumber')?.errors?.['required']" style="color:red">Phone number is required</div>
+          <div *ngIf="saveCandidatureForm.get('phoneNumber')?.errors?.['pattern']" style="color:red">Phone number must be 10 digits</div>
+        </div>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Study Level :</mat-label>
+       <!-- <input matInput placeholder="Study Level" formControlName="studyLevel" required>-->
+        <mat-select formControlName="studyLevel" required>
+          <mat-option value="bac+2">Bac + 2</mat-option>
+          <mat-option value="bac+3">Bac + 3</mat-option>
+          <mat-option value="bac+5">Bac + 5</mat-option>
+          <!-- Add more options as needed -->
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Number of years experience :</mat-label>
+        <input matInput placeholder="Number of years experience " formControlName="nbrYearsExp" required>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Last employee :</mat-label>
+        <input matInput placeholder="Last employee " formControlName="lastEmployer" required>
+      </mat-form-field>
+      <div>
+        <button type="submit" mat-button matStepperNext [disabled]="saveCandidatureForm.invalid">Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="CvForm">
+    <form [formGroup]="CvForm"  enctype="multipart/form-data">
+      <ng-template matStepLabel>Upload your CV</ng-template>
+        <mat-label>Address</mat-label>
+        <input formControlName="file" type="file" id="cvFile" (change)="onFileChange($event)" name="cvFile" accept=".pdf,.doc,.docx,.jpg, .jpeg, .png" required>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button type="submit" matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+    <mat-step [stepControl]="saveCandidatureForm">
+      <form [formGroup]="CvForm" (ngSubmit)="uploadCv()">
+        <ng-template matStepLabel>Details Confirmation</ng-template>
+          <mat-label >Last name : {{this.saveCandidatureForm.value.lastName}}</mat-label><br>
+          <mat-label >First name : {{this.saveCandidatureForm.value.firstName}}</mat-label><br>
+          <mat-label >Email : {{this.saveCandidatureForm.value.email}}</mat-label><br>
+          <mat-label>Phone : {{this.saveCandidatureForm.value.phoneNumber}}</mat-label><br>
+          <mat-label>Study Level : {{this.saveCandidatureForm.value.studyLevel}}</mat-label><br>
+          <mat-label>Number of years experience : {{this.saveCandidatureForm.value.nbrYearsExp}}</mat-label><br>
+          <mat-label>Last Employer : {{this.saveCandidatureForm.value.lastEmployer}}</mat-label><br>
+          <ng-template matStepLabel>Upload your CV</ng-template>
+            <mat-label>Address</mat-label>
+            <button style="border:none" type="button" (click)="fetchCV(this.cvFile)" ><i class="bi bi-file-person"></i></button>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button type="submit"  matStepperNext>Finish</button>
+        </div>
+      </form>
+    </mat-step>
+</mat-stepper>
